@@ -77,7 +77,7 @@ def _save_to_db(todos: List[Dict]):
     # 'TinyDB caches query result for performance. That way re-running a query won’t have to read the data from the storage as long as the database hasn’t been modified.'
 
     # check for duplicates
-    for todo in todos:
+    for todo in list(todos):
         # not gauranteed that Habitica doesn't re-use ids after todo deleted from server
         # thus more complex condition to check for duplicate
         duplicates_count = db.count(
@@ -89,8 +89,7 @@ def _save_to_db(todos: List[Dict]):
             print(f'Duplicate encoutered!  A todo in input file matches {duplicates_count} todo(s) in database (matches id, name and completed date)')
             print('Skipping insertion.  Please verify that this behavior is correct')
             print(f'Culprint todo (input file):\n{todo}')
-            print('Exiting ...')
-            sys.exit()
+            todos.remove(todo)
 
     inserted = db.insert_multiple(todos)
     print(f'Inserted {len(inserted)} todos :)')
