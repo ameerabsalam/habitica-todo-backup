@@ -8,6 +8,9 @@ from tinydb.middlewares import CachingMiddleware
 import json
 import argparse
 import sys
+import os
+import shutil
+from datetime import datetime
 from typing import Dict, List
 
 
@@ -46,9 +49,26 @@ def _extract_completed_todos(file_path: str) -> List[Dict]:
     # pprint(todos[1])
     return todos
 
+def _backup_db():
+    DB_BACKUP_DIR = '.database_backups'
+    DB_PATH = 'full_history_db.json'
+    try:
+        os.mkdir(DB_BACKUP_DIR)
+    except FileExistsError:
+        pass
+    try:
+        shutil.copy(DB_PATH, DB_BACKUP_DIR)
+    except FileNotFoundError:
+        return
+    backup_filename = (str(datetime.now())).replace(' ', '_') + '.json'
+    shutil.move(DB_BACKUP_DIR + '/' + DB_PATH, DB_BACKUP_DIR + '/' + backup_filename)
+    print(f'Backed up database to {DB_BACKUP_DIR + "/" + backup_filename}')
+
 def _save_to_db(todos: List[Dict]):
 
     #TODO: backup existing to hidden backups folder using abs time as fname
+    _backup_db()
+
     db = TinyDB('full_history_db.json', sort_keys=True, indent=4, separators=(',', ': '), storage=CachingMiddleware(JSONStorage))
     print(f'{len(db.all())} currently in database')
 

@@ -5,6 +5,7 @@
 # Input and Output files
 full_history_db.json
 habitica-user-data.json
+.database_backups/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
