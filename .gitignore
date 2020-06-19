@@ -1,3 +1,11 @@
+# VsCode
+.vscode
+*.code-workspace
+
+# Input and Output files
+full_history_db.json
+habitica-user-data.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
